@@ -8,10 +8,12 @@ class UploadDateMtimePP(PostProcessor):
         self._kwargs = kwargs
 
     def run(self, info):
+        filepath = info.get('filepath')
         upload_date = info.get('upload_date')
-        if upload_date:
+
+        if filepath and upload_date:
             self.to_screen(
                 f'Setting {info["_filename"]!r} mtime to {hyphenate_date(upload_date)}')
             timestamp = datetime_from_str(upload_date).timestamp()
-            self.try_utime(info['filepath'], timestamp, timestamp)
+            self.try_utime(filepath, timestamp, timestamp)
         return [], info
